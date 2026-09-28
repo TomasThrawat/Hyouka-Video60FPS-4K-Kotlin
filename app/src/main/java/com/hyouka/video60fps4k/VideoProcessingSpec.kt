@@ -5,9 +5,13 @@ enum class OutputResolution(
     val width: Int,
     val height: Int
 ) {
+    ORIGINAL("Original", 0, 0),
     HD_1080P("1080p", 1920, 1080),
     QHD_2K("2K", 2560, 1440),
-    UHD_4K("4K", 3840, 2160)
+    UHD_4K("4K", 3840, 2160);
+
+    val keepsSourceResolution: Boolean
+        get() = this == ORIGINAL
 }
 
 enum class OutputFps(val value: Int) {
@@ -26,13 +30,19 @@ data class ConversionSettings(
 
 object VideoProcessingSpec {
     fun buildFilter(settings: ConversionSettings): String {
+        val fps = settings.fps.value
+        val interpolation = "minterpolate=fps=\${fps}:mi_mode=mci:mc_mode=aobmc:me_mode=bidir:vsbmc=1"
+
+        if (settings.resolution.keepsSourceResolution) {
+            return interpolation
+        }
+
         val width = settings.resolution.width
         val height = settings.resolution.height
-        val fps = settings.fps.value
 
-        return "minterpolate=fps=$fps:mi_mode=mci:mc_mode=aobmc:me_mode=bidir:vsbmc=1," +
-            "scale=$width:$height:force_original_aspect_ratio=decrease," +
-            "pad=$width:$height:(ow-iw)/2:(oh-ih)/2"
+        return interpolation +
+            ",scale=\${width}:\${height}:force_original_aspect_ratio=decrease," +
+            "pad=\${width}:\${height}:(ow-iw)/2:(oh-ih)/2"
     }
 
     fun buildCommand(input: String, output: String, settings: ConversionSettings): String {
@@ -56,5 +66,5 @@ object VideoProcessingSpec {
     }
 
     private fun quote(value: String): String =
-        "'" + value.replace("'", "'\\''") + "'"
+        "'" + value.replace("'", "'\\\\''") + "'"
 }

@@ -23,10 +23,12 @@ jobs:
           distribution: temurin
           java-version: "17"
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v4
-        with:
-          packages: ""
+      - name: Verify preinstalled Android SDK
+        run: |
+          test -d "$ANDROID_SDK_ROOT/platforms/android-36"
+          test -d "$ANDROID_SDK_ROOT/build-tools/35.0.0"
+          echo "Android SDK: $ANDROID_SDK_ROOT"
+          "$ANDROID_SDK_ROOT/platform-tools/adb" version
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v6

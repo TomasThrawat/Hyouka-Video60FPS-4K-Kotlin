@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Hyouka Video 60 FPS + 4K</string>
+    <string name="choose_video">Choose video</string>
+    <string name="convert">Convert to 60 FPS + 4K</string>
+    <string name="status_idle">Choose a video to start</string>
+    <string name="status_processing">Processing…</string>
+    <string name="status_done">Done</string>
+    <string name="status_error">Processing failed</string>
+    <string name="share">Share result</string>
+    <string name="result_info">Result</string>
+</resources>

@@ -119,6 +119,13 @@
                     app:singleSelection="true">
 
                     <com.google.android.material.chip.Chip
+                        android:id="@+id/resolutionOriginal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checkable="true"
+                        android:text="@string/original_resolution" />
+
+                    <com.google.android.material.chip.Chip
                         android:id="@+id/resolution1080p"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

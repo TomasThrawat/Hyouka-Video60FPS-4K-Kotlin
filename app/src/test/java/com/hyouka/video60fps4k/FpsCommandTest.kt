@@ -21,7 +21,7 @@ class FpsCommandTest {
             )
             assertTrue(filter.contains("minterpolate=fps=60"))
             assertTrue(filter.contains(fragment))
-            assertTrue(filter.contains("pad=\${resolution.width}:\${resolution.height}"))
+            assertTrue(filter.contains("pad=${resolution.width}:${resolution.height}"))
         }
     }
 
@@ -59,8 +59,8 @@ class FpsCommandTest {
                 "/output/result.mp4",
                 ConversionSettings(OutputResolution.UHD_4K, fps)
             )
-            assertTrue(command.contains("minterpolate=fps=\${fps.value}"))
-            assertTrue(command.contains("-r \${fps.value}"))
+            assertTrue(command.contains("minterpolate=fps=${fps.value}"))
+            assertTrue(command.contains("-r ${fps.value}"))
             assertTrue(command.contains("-fps_mode cfr"))
         }
 

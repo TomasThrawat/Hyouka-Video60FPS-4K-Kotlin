@@ -32,6 +32,9 @@ android {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1,NOTICE,NOTICE.txt,LICENSE,LICENSE.txt}"
         }
+        jniLibs {
+            keepDebugSymbols += "**/*.so"
+        }
     }
 }
 

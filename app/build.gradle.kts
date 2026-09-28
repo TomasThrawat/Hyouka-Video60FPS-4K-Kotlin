@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.hyouka.video60fps4k"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.hyouka.video60fps4k"

@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private var selectedUri: Uri? = null
     private var outputFile: File? = null
-    private var selectedResolution = OutputResolution.UHD_4K
+    private var selectedResolution = OutputResolution.ORIGINAL
     private var selectedFps = OutputFps.FPS_60
     private val executor = Executors.newSingleThreadExecutor()
 
@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         binding.progressBar.visibility = View.GONE
 
-        binding.resolution4k.isChecked = true
+        binding.resolutionOriginal.isChecked = true
         binding.fps60.isChecked = true
 
         binding.chooseButton.setOnClickListener {
@@ -65,6 +65,12 @@ class MainActivity : AppCompatActivity() {
             outputFile?.let(::shareVideo)
         }
 
+        binding.resolutionOriginal.setOnCheckedChangeListener { _, checked ->
+            if (checked) {
+                selectedResolution = OutputResolution.ORIGINAL
+                updateSelectionSummary()
+            }
+        }
         binding.resolution1080p.setOnCheckedChangeListener { _, checked ->
             if (checked) {
                 selectedResolution = OutputResolution.HD_1080P
@@ -85,50 +91,37 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.fps60.setOnCheckedChangeListener { _, checked ->
-            if (checked) {
-                selectedFps = OutputFps.FPS_60
-                updateSelectionSummary()
-            }
+            if (checked) { selectedFps = OutputFps.FPS_60; updateSelectionSummary() }
         }
         binding.fps90.setOnCheckedChangeListener { _, checked ->
-            if (checked) {
-                selectedFps = OutputFps.FPS_90
-                updateSelectionSummary()
-            }
+            if (checked) { selectedFps = OutputFps.FPS_90; updateSelectionSummary() }
         }
         binding.fps120.setOnCheckedChangeListener { _, checked ->
-            if (checked) {
-                selectedFps = OutputFps.FPS_120
-                updateSelectionSummary()
-            }
+            if (checked) { selectedFps = OutputFps.FPS_120; updateSelectionSummary() }
         }
         binding.fps144.setOnCheckedChangeListener { _, checked ->
-            if (checked) {
-                selectedFps = OutputFps.FPS_144
-                updateSelectionSummary()
-            }
+            if (checked) { selectedFps = OutputFps.FPS_144; updateSelectionSummary() }
         }
         binding.fps240.setOnCheckedChangeListener { _, checked ->
-            if (checked) {
-                selectedFps = OutputFps.FPS_240
-                updateSelectionSummary()
-            }
+            if (checked) { selectedFps = OutputFps.FPS_240; updateSelectionSummary() }
         }
         binding.fps360.setOnCheckedChangeListener { _, checked ->
-            if (checked) {
-                selectedFps = OutputFps.FPS_360
-                updateSelectionSummary()
-            }
+            if (checked) { selectedFps = OutputFps.FPS_360; updateSelectionSummary() }
         }
 
         updateSelectionSummary()
     }
 
     private fun updateSelectionSummary() {
-        val size = "${selectedResolution.width}×${selectedResolution.height}"
+        val resolutionText = if (selectedResolution.keepsSourceResolution) {
+            getString(R.string.original_resolution)
+        } else {
+            "\${selectedResolution.width}×\${selectedResolution.height}"
+        }
+
         binding.sourceInfo.text = getString(
             R.string.output_summary,
-            size,
+            resolutionText,
             selectedFps.value
         )
         binding.convertButton.text = getString(
@@ -145,7 +138,7 @@ class MainActivity : AppCompatActivity() {
         executor.execute {
             var inputFile: File? = null
             try {
-                inputFile = File(cacheDir, "input-${System.currentTimeMillis()}.mp4")
+                inputFile = File(cacheDir, "input-\${System.currentTimeMillis()}.mp4")
                 val source = contentResolver.openInputStream(uri)
                 requireNotNull(source) { "Unable to read selected video." }
                 source.use { input ->
@@ -158,7 +151,7 @@ class MainActivity : AppCompatActivity() {
 
                 val out = File(
                     moviesDir,
-                    "Hyouka_${settings.resolution.label}_${settings.fps.value}FPS_${System.currentTimeMillis()}.mp4"
+                    "Hyouka_\${settings.resolution.label}_\${settings.fps.value}FPS_\${System.currentTimeMillis()}.mp4"
                 )
                 outputFile = out
 
@@ -174,11 +167,15 @@ class MainActivity : AppCompatActivity() {
                     setProcessingState(false)
                     if (success) {
                         binding.statusText.text = getString(R.string.status_done)
+                        val resultResolution = if (settings.resolution.keepsSourceResolution) {
+                            getString(R.string.original_resolution)
+                        } else {
+                            "\${settings.resolution.width}×\${settings.resolution.height}"
+                        }
                         binding.resultInfo.text = getString(
                             R.string.result_format,
                             out.name,
-                            settings.resolution.width,
-                            settings.resolution.height,
+                            resultResolution,
                             settings.fps.value
                         )
                         binding.resultCard.visibility = View.VISIBLE
@@ -250,11 +247,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun shareVideo(file: File) {
-        val uri = FileProvider.getUriForFile(
-            this,
-            "com.hyouka.video60fps4k.fileprovider",
-            file
-        )
+        val uri = FileProvider.getUriForFile(this, "com.hyouka.video60fps4k.fileprovider", file)
         val intent = Intent(Intent.ACTION_SEND).apply {
             type = "video/mp4"
             putExtra(Intent.EXTRA_STREAM, uri)

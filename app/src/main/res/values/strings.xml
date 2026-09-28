@@ -1,11 +1,22 @@
 <resources>
-    <string name="app_name">Hyouka Video 60 FPS + 4K</string>
+    <string name="app_name">Hyouka Video Converter</string>
+    <string name="subtitle">Smooth motion interpolation and local upscaling</string>
     <string name="choose_video">Choose video</string>
-    <string name="convert">Convert to 60 FPS + 4K</string>
+    <string name="convert">Convert video</string>
+    <string name="convert_format">Convert • %1$s • %2$d FPS</string>
     <string name="status_idle">Choose a video to start</string>
-    <string name="status_processing">Processing…</string>
+    <string name="status_processing_format">Processing %1$s at %2$d FPS…</string>
     <string name="status_done">Done</string>
     <string name="status_error">Processing failed</string>
     <string name="share">Share result</string>
-    <string name="result_info">Result</string>
+    <string name="result_info">Result ready</string>
+    <string name="output_resolution">Output resolution</string>
+    <string name="frame_rate">Frame rate</string>
+    <string name="output_summary">Output %1$s • %2$d FPS</string>
+    <string name="performance_note">Higher frame rates require substantially more processing time and CPU power.</string>
+    <string name="result_format">%1$s
+%2$d×%3$d • %4$d FPS • H.264 + AAC</string>
+    <string name="toast_success">Video processed successfully</string>
+    <string name="unknown_error">Unknown error</string>
+    <string name="selected_video">Selected video</string>
 </resources>

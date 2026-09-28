@@ -1,11 +1,11 @@
 <resources>
     <style name="Theme.HyoukaVideo60FPS4K" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="android:windowBackground">@color/background</item>
-        <item name="android:navigationBarColor">@color/background</item>
-        <item name="android:statusBarColor">@color/background</item>
-        <item name="colorPrimary">@color/accent</item>
-        <item name="colorSecondary">@color/accent</item>
-        <item name="android:windowLightStatusBar">false</item>
-        <item name="android:windowLightNavigationBar">false</item>
+        <item name="android:windowBackground">@color/seed_surface</item>
+        <item name="android:navigationBarColor">@color/seed_surface</item>
+        <item name="android:statusBarColor">@color/seed_surface</item>
+        <item name="colorPrimary">@color/seed_primary</item>
+        <item name="colorOnPrimary">@color/seed_on_primary</item>
+        <item name="colorSecondary">@color/seed_secondary</item>
+        <item name="colorSurface">@color/seed_surface</item>
     </style>
 </resources>

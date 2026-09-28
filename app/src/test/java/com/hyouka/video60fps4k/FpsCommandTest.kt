@@ -1,6 +1,7 @@
 package com.hyouka.video60fps4k
 
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -20,8 +21,34 @@ class FpsCommandTest {
             )
             assertTrue(filter.contains("minterpolate=fps=60"))
             assertTrue(filter.contains(fragment))
-            assertTrue(filter.contains("pad=${resolution.width}:${resolution.height}"))
+            assertTrue(filter.contains("pad=\${resolution.width}:\${resolution.height}"))
         }
+    }
+
+    @Test
+    fun originalResolutionChangesOnlyFps() {
+        val settings = ConversionSettings(OutputResolution.ORIGINAL, OutputFps.FPS_120)
+        val filter = VideoProcessingSpec.buildFilter(settings)
+        val command = VideoProcessingSpec.buildCommand(
+            "/input/source video.mp4",
+            "/output/result.mp4",
+            settings
+        )
+
+        assertEquals(
+            "minterpolate=fps=120:mi_mode=mci:mc_mode=aobmc:me_mode=bidir:vsbmc=1",
+            filter
+        )
+        assertFalse(filter.contains("scale="))
+        assertFalse(filter.contains("pad="))
+        assertTrue(command.contains("-r 120"))
+        assertTrue(command.contains("-fps_mode cfr"))
+    }
+
+    @Test
+    fun originalModeIsPartOfResolutionChoices() {
+        assertTrue(OutputResolution.ORIGINAL.keepsSourceResolution)
+        assertEquals(4, OutputResolution.entries.size)
     }
 
     @Test
@@ -32,8 +59,8 @@ class FpsCommandTest {
                 "/output/result.mp4",
                 ConversionSettings(OutputResolution.UHD_4K, fps)
             )
-            assertTrue(command.contains("minterpolate=fps=${fps.value}"))
-            assertTrue(command.contains("-r ${fps.value}"))
+            assertTrue(command.contains("minterpolate=fps=\${fps.value}"))
+            assertTrue(command.contains("-r \${fps.value}"))
             assertTrue(command.contains("-fps_mode cfr"))
         }
 

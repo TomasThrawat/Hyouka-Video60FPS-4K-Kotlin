@@ -85,8 +85,7 @@ class MainActivity : AppCompatActivity() {
                     if (success) {
                         binding.statusText.text = getString(R.string.status_done)
                         binding.resultInfo.text =
-                            out.name + "
-3840×2160 • 60 FPS • H.264 + AAC"
+                            out.name + "\n3840×2160 • 60 FPS • H.264 + AAC"
                         binding.resultCard.visibility = View.VISIBLE
                         Toast.makeText(
                             this,
